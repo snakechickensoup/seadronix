@@ -13,7 +13,7 @@ const Header = () => {
         <Link href='/fibo' className='text-lg font-medium text-white'>
           문제 1
         </Link>
-        <Link href='/fibo' className='text-lg font-medium text-white'>
+        <Link href='/video' className='text-lg font-medium text-white'>
           문제 2
         </Link>
       </div>
