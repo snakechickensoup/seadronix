@@ -1,6 +1,7 @@
 import ProblemDescription from '@/components/common/problem-desc';
 import FibonacciDescription from '@/components/fibonacci/description';
 import FibonacciForm from '@/components/fibonacci/form';
+import FibonacciResult from '@/components/fibonacci/result';
 
 const FibonacciPage = () => {
   return (
@@ -9,6 +10,7 @@ const FibonacciPage = () => {
         <FibonacciDescription />
       </ProblemDescription>
       <FibonacciForm />
+      <FibonacciResult />
     </div>
   );
 };

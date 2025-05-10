@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -15,10 +16,21 @@ type ProblemDescriptionProps = {
 
 const ProblemDescription = (props: ProblemDescriptionProps) => {
   const { title, children } = props;
+  const [isCollapsed, setIsCollapsed] = useState('item-1');
+
+  const handleAccordionChange = () => {
+    setIsCollapsed((prev) => (prev === 'item-1' ? '' : 'item-1'));
+  };
+
   return (
     <section className='flex flex-col gap-4'>
       <h2 className='text-xl font-semibold'>{title}</h2>
-      <Accordion type='single' collapsible>
+      <Accordion
+        type='single'
+        collapsible
+        value={isCollapsed}
+        onValueChange={handleAccordionChange}
+      >
         <AccordionItem value='item-1'>
           <Card className='bg-white/50'>
             <CardHeader>
