@@ -43,7 +43,7 @@ const FibonacciForm = (props: FibonacciFormProps) => {
 
   function handleSubmit(values: z.infer<typeof formSchema>) {
     try {
-      handleInput(values.input);
+      handleInput(values.input.trim());
     } catch (error) {
       form.setError('input', { message: (error as Error).message });
     }

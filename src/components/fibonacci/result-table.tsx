@@ -7,8 +7,14 @@ import {
   TableCell,
   TableCaption
 } from '../ui/table';
+import type { CountFibResult } from '@/lib/types';
 
-const FibonacciResultTable = () => {
+type FibonacciResultTableProps = {
+  result: CountFibResult[];
+};
+
+const FibonacciResultTable = (props: FibonacciResultTableProps) => {
+  const { result } = props;
   return (
     <Table>
       <TableCaption className='mb-2 font-semibold opacity-90'>
@@ -23,12 +29,14 @@ const FibonacciResultTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell>1</TableCell>
-          <TableCell>1</TableCell>
-          <TableCell>1</TableCell>
-          <TableCell>1</TableCell>
-        </TableRow>
+        {result.map((res, index) => (
+          <TableRow key={index}>
+            <TableCell>{index + 1}</TableCell>
+            <TableCell>{res.n}</TableCell>
+            <TableCell>{res.count0}</TableCell>
+            <TableCell>{res.count1}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

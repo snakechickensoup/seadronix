@@ -1,3 +1,5 @@
+import type { CountFibResult } from './types';
+
 const convertInput = (input: string) => {
   const list: number[] = [];
   input.split('\n').forEach((item) => {
@@ -16,7 +18,7 @@ const convertInput = (input: string) => {
   return list;
 };
 
-export const getCountFibonacci = (input: string): string[] => {
+export const getCountFibonacci = (input: string): CountFibResult[] => {
   const nums = convertInput(input);
   const countFibs = [
     [1, 0],
@@ -32,10 +34,14 @@ export const getCountFibonacci = (input: string): string[] => {
     return countFibs[num];
   };
 
-  const result: string[] = [];
+  const result: CountFibResult[] = [];
   for (let i = 1; i < nums.length; i++) {
     const count = countFibonacciPrints(nums[i]);
-    result.push(`${count[0]} ${count[1]}`);
+    result.push({
+      n: nums[i],
+      count0: count[0],
+      count1: count[1]
+    });
   }
 
   return result;
