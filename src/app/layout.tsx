@@ -11,7 +11,7 @@ const myFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: '씨드로닉스 사전 과제',
+  title: '씨드로닉스 사전 과제 | 강미정',
   description: '프론트엔드 강미정'
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ko' className={myFont.className} suppressHydrationWarning>
-      <body className='flex justify-center w-full min-h-dvh'>
+      <body className='flex min-h-dvh w-full justify-center'>
         <Layout>{children}</Layout>
       </body>
     </html>
