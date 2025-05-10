@@ -16,11 +16,11 @@ type ProblemDescriptionProps = {
 const ProblemDescription = (props: ProblemDescriptionProps) => {
   const { title, children } = props;
   return (
-    <section className='flex flex-1 flex-col gap-4 px-6 py-8'>
+    <section className='flex flex-col gap-4'>
       <h2 className='text-xl font-semibold'>{title}</h2>
       <Accordion type='single' collapsible>
         <AccordionItem value='item-1'>
-          <Card className='bg-white/70'>
+          <Card className='bg-white/50'>
             <CardHeader>
               <AccordionTrigger className='p-0'>
                 <CardTitle className='text-md'>문제 설명</CardTitle>
