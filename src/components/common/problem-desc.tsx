@@ -1,5 +1,11 @@
 'use client';
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '../ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 type ProblemDescriptionProps = {
@@ -12,12 +18,20 @@ const ProblemDescription = (props: ProblemDescriptionProps) => {
   return (
     <section className='flex flex-1 flex-col gap-4 px-6 py-8'>
       <h2 className='text-xl font-semibold'>{title}</h2>
-      <Card className='bg-primary-foreground'>
-        <CardHeader>
-          <CardTitle className='text-md'>문제 설명</CardTitle>
-        </CardHeader>
-        <CardContent>{children}</CardContent>
-      </Card>
+      <Accordion type='single' collapsible>
+        <AccordionItem value='item-1'>
+          <Card className='bg-white/70'>
+            <CardHeader>
+              <AccordionTrigger className='p-0'>
+                <CardTitle className='text-md'>문제 설명</CardTitle>
+              </AccordionTrigger>
+            </CardHeader>
+            <AccordionContent>
+              <CardContent>{children}</CardContent>
+            </AccordionContent>
+          </Card>
+        </AccordionItem>
+      </Accordion>
     </section>
   );
 };
