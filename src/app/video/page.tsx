@@ -1,4 +1,5 @@
 import ProblemDescription from '@/components/common/problem-desc';
+import VideoPlayer from '@/components/video/player';
 
 const VideoPage = () => {
   return (
@@ -21,6 +22,7 @@ const VideoPage = () => {
           </ol>
         </div>
       </ProblemDescription>
+      <VideoPlayer />
     </div>
   );
 };
