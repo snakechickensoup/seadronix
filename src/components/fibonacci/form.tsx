@@ -1,5 +1,3 @@
-'use client';
-
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -29,7 +27,12 @@ const formSchema = z.object({
   })
 });
 
-const FibonacciForm = () => {
+interface FibonacciFormProps {
+  handleInput: (input: string) => void;
+}
+
+const FibonacciForm = (props: FibonacciFormProps) => {
+  const { handleInput } = props;
   const [isCollapsed, setIsCollapsed] = useState('item-2');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,8 +41,12 @@ const FibonacciForm = () => {
     }
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function handleSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      handleInput(values.input);
+    } catch (error) {
+      form.setError('input', { message: (error as Error).message });
+    }
   }
 
   const handleAccordionChange = () => {
@@ -63,7 +70,7 @@ const FibonacciForm = () => {
             <CardContent>
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit(onSubmit)}
+                  onSubmit={form.handleSubmit(handleSubmit)}
                   className='flex flex-col items-end space-y-4'
                 >
                   <FormField
