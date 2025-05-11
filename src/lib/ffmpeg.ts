@@ -57,6 +57,7 @@ class FFmpegWrapper {
     const outputFileName = 'output.mp4';
 
     try {
+      await this.deleteFiles(inputFileName, outputFileName);
       await this.ffmpeg.writeFile(inputFileName, video);
       await this.ffmpeg.exec([
         '-i',
@@ -73,10 +74,9 @@ class FFmpegWrapper {
         '128k',
         outputFileName
       ]);
-      const outputData = (await this.ffmpeg.readFile('output.mp4')) as Uint8Array;
+      const outputData = (await this.ffmpeg.readFile(outputFileName)) as Uint8Array;
 
-      await this.ffmpeg.deleteFile(inputFileName);
-      await this.ffmpeg.deleteFile(outputFileName);
+      await this.deleteFiles(inputFileName, outputFileName);
 
       const endTime = window.performance.now();
 
@@ -86,6 +86,15 @@ class FFmpegWrapper {
       };
     } catch (error) {
       throw Error('비디오 변환 실패' + error);
+    }
+  }
+
+  async deleteFiles(inputFileName: string, outputFileName: string) {
+    try {
+      await this.ffmpeg.deleteFile(inputFileName);
+      await this.ffmpeg.deleteFile(outputFileName);
+    } catch (error) {
+      console.warn('파일 삭제 실패', error);
     }
   }
 

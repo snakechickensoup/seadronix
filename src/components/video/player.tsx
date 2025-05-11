@@ -2,58 +2,50 @@ import { useEffect, useRef, useState } from 'react';
 import SelectVideoDialog from './select-dialog';
 import { Skeleton } from '../ui/skeleton';
 import { ffmpegInstance } from '@/lib/ffmpeg';
+import { cleanUpVideoElement, playVideoBlob, revokeObjectURL } from '@/lib/video';
 
 const VideoPlayer = () => {
   const [isFFmpegLoaded, setIsFFmpegLoaded] = useState(false);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [latency, setLatency] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const initPlayer = async () => {
-      await loadFFmpeg();
+      await ffmpegInstance.load();
+      setIsFFmpegLoaded(true);
 
-      if (process.env.NEXT_PUBLIC_VIDEO_URL) {
-        startStreaming(process.env.NEXT_PUBLIC_VIDEO_URL);
+      const placeholderVideo = process.env.NEXT_PUBLIC_VIDEO_URL;
+      if (placeholderVideo) {
+        startStreaming(placeholderVideo);
       }
     };
 
     initPlayer();
 
     return () => {
-      if (videoUrl) {
-        URL.revokeObjectURL(videoUrl);
+      if (videoRef.current) {
+        revokeObjectURL(videoRef.current.src);
       }
     };
   }, []);
 
-  const loadFFmpeg = async () => {
-    try {
-      await ffmpegInstance.load();
-      setIsFFmpegLoaded(true);
-    } catch (error) {
-      throw new Error('FFmpeg 로드 실패: ' + error);
-    }
-  };
-
   const startStreaming = async (url: string) => {
+    if (isProcessing || !videoRef.current) return;
+    setIsProcessing(true);
+    const video = videoRef.current;
+
     try {
-      if (videoUrl) {
-        URL.revokeObjectURL(videoUrl);
-      }
+      cleanUpVideoElement(video);
 
       const result = await ffmpegInstance.streamVideo(url);
-
-      if (result && result.videoBlob) {
-        const videoUrl = URL.createObjectURL(result.videoBlob);
-        setVideoUrl(videoUrl);
-
-        if (videoRef.current) {
-          videoRef.current.src = videoUrl;
-          videoRef.current.play();
-        }
-      }
+      if (!result || !result.videoBlob) throw new Error('비디오 변환 실패');
+      await playVideoBlob(video, result.videoBlob);
+      setLatency(result.latency.total || 0);
     } catch (error) {
-      throw new Error('비디오 스트리밍 실패: ' + error);
+      console.error('비디오 스트리밍 실패:', error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -71,9 +63,14 @@ const VideoPlayer = () => {
         <>
           <SelectVideoDialog />
           <div className='relative w-full flex-1 overflow-hidden'>
-            <video controls className='h-full w-full rounded object-cover' ref={videoRef} />
+            <video
+              controls
+              className='h-full w-full rounded object-cover'
+              ref={videoRef}
+              playsInline
+            />
             <div className='bg-primary/70 absolute top-0 left-0 m-2 rounded px-3 py-1.5 text-sm font-semibold text-white'>
-              지연시간: {0} ms
+              지연시간: {Math.round(latency)} ms
             </div>
           </div>
         </>
