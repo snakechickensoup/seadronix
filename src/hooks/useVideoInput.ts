@@ -67,6 +67,10 @@ export const useVideoInput = (form: UseFormReturn<VideoFormValues>) => {
     return null;
   }, [setValue, fileInputRef, setInputId]);
 
+  const resetInputId = useCallback(() => {
+    setInputId(null);
+  }, [setInputId]);
+
   return {
     fileInputRef,
     inputId,
@@ -74,6 +78,7 @@ export const useVideoInput = (form: UseFormReturn<VideoFormValues>) => {
     handleDragOver,
     handleFileInputChange,
     handleUrlInputChange,
-    clearFile
+    clearFile,
+    resetInputId
   };
 };

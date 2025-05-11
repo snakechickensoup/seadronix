@@ -60,7 +60,8 @@ const SelectVideoDialog = (props: SelectVideoDialogProps) => {
     handleDragOver,
     handleFileInputChange,
     handleUrlInputChange,
-    clearFile
+    clearFile,
+    resetInputId
   } = useVideoInput(form);
 
   const fileValue = form.watch('file');
@@ -70,6 +71,7 @@ const SelectVideoDialog = (props: SelectVideoDialogProps) => {
     onFileSelect(values.file || values.videoUrl || '');
     setOpen(false);
     form.reset();
+    resetInputId();
   };
 
   return (
