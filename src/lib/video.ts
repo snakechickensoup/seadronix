@@ -18,7 +18,15 @@ export const playVideoBlob = async (video: HTMLVideoElement, blob: Blob) => {
   video.load();
   video.muted = true;
 
-  await video.play().catch((error) => {
-    console.error('비디오 재생 실패:', error);
+  await new Promise((resolve) => {
+    video.onloadeddata = resolve;
   });
+
+  try {
+    await video.play();
+  } catch (error) {
+    console.error('비디오 재생 실패:', error);
+    video.src = '';
+    video.load();
+  }
 };

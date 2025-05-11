@@ -39,8 +39,12 @@ const VideoPlayer = () => {
     try {
       cleanUpVideoElement(video);
 
-      const result = await ffmpegInstance.streamVideo(url);
+      const blob = await fetch(url).then((res) => res.blob());
+      const file = new File([blob], 'video.mp4', { type: blob.type });
+      const result = await ffmpegInstance.streamVideo(file);
+
       if (!result || !result.videoBlob) throw new Error('비디오 변환 실패');
+
       await playVideoBlob(video, result.videoBlob);
       setLatency(result.latency.total || 0);
     } catch (error) {

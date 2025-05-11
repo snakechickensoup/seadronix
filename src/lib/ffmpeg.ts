@@ -1,7 +1,7 @@
 'use client';
 
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import { toBlobURL } from '@ffmpeg/util';
 
 const baseURL = process.env.NEXT_PUBLIC_FFMPEG_URL || '';
 
@@ -35,14 +35,23 @@ class FFmpegWrapper {
     }
   }
 
-  async loadVideo(url: string) {
+  async loadVideo(input: string | File) {
     const startTime = window.performance.now();
+    let videoData: Uint8Array;
 
     try {
-      const data = await fetchFile(url);
+      if (typeof input === 'string') {
+        const res = await fetch(input);
+        const buffer = await res.arrayBuffer();
+        videoData = new Uint8Array(buffer);
+      } else {
+        const buffer = await input.arrayBuffer();
+        videoData = new Uint8Array(buffer);
+      }
+
       const endTime = window.performance.now();
       return {
-        data,
+        data: videoData,
         loadTime: endTime - startTime
       };
     } catch (error) {
@@ -98,22 +107,24 @@ class FFmpegWrapper {
     }
   }
 
-  async streamVideo(url: string) {
+  async streamVideo(input: File | string) {
     if (!this.ffmpeg.loaded) {
       await this.load();
     }
 
-    const fileExt = url.split('.').pop()?.toLowerCase() || 'mp4';
+    const inputExt =
+      typeof input === 'string'
+        ? input.split('.').pop()?.toLowerCase() || 'mp4'
+        : input.name.split('.').pop()?.toLowerCase() || 'mp4';
     try {
-      const { data: videoData, loadTime } = await this.loadVideo(url);
-      const { data: outputData, convertTime } = await this.convertVideo(videoData, fileExt);
+      const { data: videoData, loadTime } = await this.loadVideo(input);
+      const { data: outputData, convertTime } = await this.convertVideo(videoData, inputExt);
       const videoBlob = new Blob([outputData], { type: 'video/mp4' });
-      const totalTime = loadTime + convertTime;
 
       return {
         videoBlob,
         latency: {
-          total: totalTime,
+          total: loadTime + convertTime,
           load: loadTime,
           convert: convertTime
         }
