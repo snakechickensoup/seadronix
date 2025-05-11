@@ -1,5 +1,3 @@
-'use client';
-
 import { useRef } from 'react';
 import { Upload, Link, Video } from 'lucide-react';
 import { DndContext } from '@dnd-kit/core';
@@ -37,18 +35,11 @@ const SelectVideoDialog = () => {
         </DialogHeader>
         <DndContext>
           <div className='space-y-4 rounded-md border-2 border-dashed p-8 text-center'>
-            <input
-              type='file'
-              ref={fileInputRef}
-              accept='video/*'
-              className='hidden'
-            />
+            <input type='file' ref={fileInputRef} accept='video/*' className='hidden' />
             <div className='flex flex-col items-center space-y-4'>
               <Upload className='text-muted-foreground' size='40' />
               <div className='space-y-2'>
-                <p className='text-sm font-medium'>
-                  여기에 파일을 끌어다 놓거나
-                </p>
+                <p className='text-sm font-medium'>여기에 파일을 끌어다 놓거나</p>
                 <Button variant='outline'>파일 선택</Button>
               </div>
               <p className='text-muted-foreground text-xs'>
@@ -70,11 +61,7 @@ const SelectVideoDialog = () => {
             비디오 URL
           </Label>
           <div className='flex gap-2'>
-            <Input
-              id='video-url'
-              placeholder='https://example.com/video.mp4'
-              className='flex-1'
-            />
+            <Input id='video-url' placeholder='https://example.com/video.mp4' className='flex-1' />
           </div>
         </form>
         <DialogFooter>
