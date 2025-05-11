@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import SelectVideoDialog from './select-dialog';
 import { Skeleton } from '../ui/skeleton';
 import { ffmpegInstance } from '@/lib/ffmpeg';
@@ -31,7 +32,7 @@ const VideoPlayer = () => {
   }, []);
 
   const startStreaming = async (url: string) => {
-    if (isProcessing || !videoRef.current) return;
+    if (!videoRef.current) return;
     setIsProcessing(true);
     const video = videoRef.current;
 
@@ -49,19 +50,18 @@ const VideoPlayer = () => {
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      startStreaming(url);
+  const handleFileUpload = (value: File | string) => {
+    if (typeof value !== 'string') {
+      value = URL.createObjectURL(value);
     }
+    startStreaming(value);
   };
 
   return (
     <>
       {isFFmpegLoaded ? (
         <>
-          <SelectVideoDialog />
+          <SelectVideoDialog onFileSelect={handleFileUpload} />
           <div className='relative w-full flex-1 overflow-hidden'>
             <video
               controls
@@ -69,8 +69,13 @@ const VideoPlayer = () => {
               ref={videoRef}
               playsInline
             />
+
             <div className='bg-primary/70 absolute top-0 left-0 m-2 rounded px-3 py-1.5 text-sm font-semibold text-white'>
-              지연시간: {Math.round(latency)} ms
+              {isProcessing ? (
+                <Loader2 className='animate-spin' />
+              ) : (
+                <>지연시간: {Math.round(latency)} ms</>
+              )}
             </div>
           </div>
         </>
