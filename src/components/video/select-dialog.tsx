@@ -190,7 +190,10 @@ const SelectVideoDialog = (props: SelectVideoDialogProps) => {
                       className='flex-1'
                       {...field}
                       disabled={inputId === 'file'}
-                      onChange={handleUrlInputChange}
+                      onChange={(e) => {
+                        handleUrlInputChange(e);
+                        field.onChange(e);
+                      }}
                     />
                   </FormControl>
                 </FormItem>
