@@ -34,17 +34,24 @@ const VideoPlayer2 = () => {
     setLatency({ start: performance.now(), end: 0, total: 0 });
 
     if (videoRef.current.src) {
-      URL.revokeObjectURL(videoRef.current.src);
-      videoRef.current.src = '';
+      // 기존 재생 중지
       videoRef.current.pause();
+      URL.revokeObjectURL(videoRef.current.src);
     }
 
     const video = videoRef.current;
-
-    video.src = url;
-    video.load();
+    video.autoplay = true;
+    video.playsInline = true;
     video.muted = true;
-    video.play();
+    video.src = url;
+
+    video.onloadeddata = async () => {
+      try {
+        await video.play();
+      } catch (err) {
+        console.error('비디오 재생 오류:', err);
+      }
+    };
 
     video.onloadedmetadata = () => {
       setLatency((prev) => ({
@@ -59,6 +66,9 @@ const VideoPlayer2 = () => {
       console.error('비디오 로딩 오류:', error);
       setIsLoading(false);
     };
+
+    // 비디오 로드 시작
+    video.load();
   };
 
   const handleFileUpload = (value: File | string) => {
