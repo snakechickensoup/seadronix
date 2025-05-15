@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
 
 import Logo from '@public/images/logo-name.svg';
-import { ArrowUpRight, Dot, Triangle } from 'lucide-react';
+import { ArrowUpRight, Dot } from 'lucide-react';
 
 export default function Home() {
   return (
