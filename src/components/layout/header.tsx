@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import Logo from '@public/images/logo-light.svg';
+import GitHub from '@public/images/github.svg';
 
 const Header = () => {
   return (
@@ -15,6 +16,14 @@ const Header = () => {
         </Link>
         <Link href='/video' className='text-lg font-medium text-white'>
           문제 2
+        </Link>
+        <Link
+          href='https://github.com/snakechickensoup/seadronix'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='text-lg font-medium text-white'
+        >
+          <Image src={GitHub} unoptimized alt='logo' height={24} priority />
         </Link>
       </div>
     </header>
