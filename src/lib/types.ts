@@ -5,8 +5,15 @@ export type CountFibResult = {
 };
 
 export type FrameData = {
-  data: Uint8Array;
-  serverTimestamp: number;
-  receiveTime: number;
-  latency: number;
+  data: ArrayBuffer;
+  timestamp: number;
+  serverSendTime: number;
+  clientReceivedTime: number;
 };
+
+export type StreamMessage = {
+  type: 'frame' | 'started' | 'stopped' | 'ended' | 'error' | 'status';
+  payload: object | string;
+};
+
+export type StreamStatus = 'disconnected' | 'connecting' | 'connected' | 'streaming';
